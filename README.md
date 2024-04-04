@@ -13,13 +13,15 @@ Creating a CRUD (Create, Read, Update, Delete) application using Express.js and 
 Please follow the below PDF file for details overview
 
 Learning Docs For  Node js (Express + Mysql) .pdf
+https://github.com/sumanatechsubhendu/express-mysql-crud/blob/master/Learning%20Docs%20For%20%20Node%20js%20(Express%20%2B%20Mysql)%20.pdf
+
 ### Installation
 clone the git repo by using below command
 
 git clone https://github.com/sumanatechsubhendu/express-mysql-crud.git
 
 ```bash
-# Install Breeze and dependencies...
+# Install npm packages and dependencies...
 npm install
 
 nodemon app.js
@@ -35,7 +37,7 @@ JWT_REFRESH_SECRET="49e27134ecc747120306b019768472fe0d45c5c4076b0d89d37f6a6d059d
 Finally, run the application via `nodemon app.js`. The application will be available at `http://localhost:3000`:
 
 ```
-npm run dev
+nodemon app.js
 ```
 
 > Note: Currently, we recommend using `localhost` during local development of your backend and frontend to avoid CORS "Same-Origin" issues.
