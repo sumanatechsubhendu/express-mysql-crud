@@ -12,8 +12,8 @@ Creating a CRUD (Create, Read, Update, Delete) application using Express.js and 
 ## Documentation
 Please follow the below PDF file for details overview
 
-Learning Docs For  Node js (Express + Mysql) .pdf
-https://github.com/sumanatechsubhendu/express-mysql-crud/blob/master/Learning%20Docs%20For%20%20Node%20js%20(Express%20%2B%20Mysql)%20.pdf
+[Learning Docs For Node.js (Express + Mysql)](https://github.com/sumanatechsubhendu/express-mysql-crud/blob/master/Learning%20Docs%20For%20%20Node%20js%20(Express%20%2B%20Mysql)%20.pdf)
+
 
 ### Installation
 clone the git repo by using below command
