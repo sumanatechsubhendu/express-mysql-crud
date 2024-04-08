@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { check, validationResult } = require('express-validator');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -70,33 +71,45 @@ app.post('/login', (req, res) => {
     });
   });
 
-// Create a new user
-app.post('/users', authenticateJWT, (req, res) => {
-    // Extract user data from request body
-    const { name, email, password } = req.body;
-  
-    // Validate user data
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Name, email, and password are required" });
+// Validation middleware for POST /users route
+const validateUser = [
+  check('name').notEmpty().withMessage('Name is required'),
+  check('email').isEmail().withMessage('Invalid email'),
+  check('password').notEmpty().withMessage('Password is required')
+  .isLength({ min: 6, max: 11 })
+  .withMessage('Password must be between 6 and 11 characters'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-  
-    // Hash the password
-    bcrypt.hash(password, 10, (err, hashedPassword) => {
+    next();
+  }
+];
+
+
+// Create a new user
+app.post('/users', authenticateJWT, validateUser, (req, res) => {
+  // If the middleware chain reaches this point, it means the request data has passed validation
+  // Extract user data from validated request body
+  const { name, email, password } = req.body;
+
+  // Hash the password
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to hash password" });
+    }
+
+    // Insert user into the database
+    const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
+    db.query(sql, [name, email, hashedPassword], (err, result) => {
       if (err) {
-        return res.status(500).json({ error: "Failed to hash password" });
+        return res.status(500).json({ error: err.message });
       }
-  
-      // Insert user into the database
-      const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-      db.query(sql, [name, email, hashedPassword], (err, result) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        res.status(201).json({ message: 'User created successfully' });
-      });
+      res.status(201).json({ message: 'User created successfully' });
     });
   });
-  
+});
 
 // Get all users
 app.get('/users', authenticateJWT, (req, res) => {
